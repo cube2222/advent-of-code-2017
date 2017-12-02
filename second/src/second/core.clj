@@ -15,19 +15,19 @@
 (defn even-division
   [seq]
   (let [seqs (map #(vector seq %) seq)
-        without-divisor (map #(vector
-                                (filter
-                                  (fn [el]
-                                    (not (= el (second %))))
-                                  (first %))
-                                (second %))
+        without-divisor (map (fn [[numbers divisor]]
+                               (vector
+                                 (filter
+                                   #(not (= % divisor))
+                                   numbers)
+                                 divisor))
                              seqs)
         divided (mapcat
-                #(map
-                   (fn [number]
-                     (/ number (second %)))
-                   (first %))
-                without-divisor)
+                  (fn [[numbers divisor]]
+                    (map
+                      #(/ % divisor)
+                      numbers))
+                  without-divisor)
         integers (filter integer? divided)]
     (first integers)))
 
